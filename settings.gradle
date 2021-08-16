@@ -1,0 +1,3 @@
+rootProject.name = "AGradleDemo"
+include ':app'
+include ':router_complie'

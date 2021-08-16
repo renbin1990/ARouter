@@ -1,0 +1,114 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdkVersion 30
+
+    defaultConfig {
+        applicationId "com.rb.renbin.agradledemo"
+        minSdkVersion 23
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug{
+         //   buildConfigField
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+}
+//字符串拼接
+task StringText{
+    def str1 = "woshishuangyinhao"
+    def str2 = "woshidanyinhao"
+
+    println str1+str2
+}
+
+//集合
+task list{
+    def list = [1,2,3,4,5]
+    println list[0]
+    list.each {
+        println it
+    }
+
+    for (int i in 1..5){
+        println list[i]
+    }
+}
+
+task map{
+    def map = ["name":"jeck","age":19]
+    println(map["name"])
+    map.each {
+        println("key:${it.key},value:${it.value}")
+    }
+}
+
+//定义一个方法  计算两数之和
+task method{
+    println(methodA(2,3))
+}
+
+def methodA(int a,int b){
+    a+b
+    //groovy默认只返回最后一行的结果
+    Student student = new Student()
+    student.name = "hahahh"
+    student.age = 1215415
+}
+
+//定义一个对象 ,在groovy没有私有一说，都能被调用
+class Student{
+    String name
+    int age
+
+    String getName() {
+        return name
+    }
+
+    void setName(String name) {
+        this.name = name
+    }
+
+    int getAge() {
+        return age
+    }
+
+    void setAge(int age) {
+        this.age = age
+    }
+}
+//测试闭包
+//task closure{
+//    println(mEach())
+//}
+////闭包--》回调或者 钩子 在groovy只对{}里面的有效，Closure
+//def mEach(closure){
+//    for (int i in 1..5){
+//        closure(i)
+//    }
+//}
