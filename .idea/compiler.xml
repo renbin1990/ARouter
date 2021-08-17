@@ -3,6 +3,9 @@
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.7">
       <module name="AGradleDemo.app" target="11" />
+      <module name="AGradleDemo.food" target="11" />
+      <module name="AGradleDemo.router" target="11" />
+      <module name="AGradleDemo.wm" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

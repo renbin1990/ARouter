@@ -1,3 +1,7 @@
 rootProject.name = "AGradleDemo"
 include ':app'
 include ':router_complie'
+include ':wm'
+include ':food'
+include ':router'
+include ':router_annotation'

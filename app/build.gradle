@@ -13,21 +13,65 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        //多渠道包code
+        flavorDimensions "versionCode"
     }
 
-    buildTypes {
-        debug{
-         //   buildConfigField
-        }
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    //签名配置
+    signingConfigs{
+        release{
+            keyAlias 'arouter'
+            keyPassword '123456'
+            storeFile file('arouter.jks')
+            storePassword '123456'
         }
     }
+
+    //自动打包切换域名 用groovy读取配置文件
+    buildTypes {
+        debug {
+            //三个参数 1 数据类型  2 变量名 3 变量值
+            buildConfigField 'String','url',getServerUrl('debug')
+        }
+        release {
+            buildConfigField 'String','url',getServerUrl('release')
+            //混淆
+            minifyEnabled true
+            // 配置签名
+            signingConfig signingConfigs.release
+            //包的输出  渠道+时间+版本号
+            android.applicationVariants.all { variant ->
+                variant.outputs.all { output ->  // each 改为 all
+                    def fileName = "${getCurrentTime()}_V${defaultConfig.versionName}_release.apk"
+                    def outFile = output.outputFile
+                    if (outFile != null && outFile.name.endsWith('.apk')) {
+                        outputFileName = fileName  //  output.outputFile 改为 outputFileName
+                    }
+                }
+            }
+        }
+    }
+    //打多个渠道包-gradle多渠道打包
+    productFlavors{
+        xiaomi{}
+        yingyongbao{}
+        huawei{}
+    }
+
+    productFlavors.all{
+        flavor ->
+            buildConfigField 'String','PLATE_FROM',"\"${name}\""
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+def  getCurrentTime(){
+    return new Date().format("yyyy-MM-dd",TimeZone.getTimeZone("UTC"))
 }
 
 dependencies {
@@ -35,10 +79,27 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation project(path: ':wm')
+    implementation project(path: ':food')
+    implementation project(path: ':router')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
+//用groovy读取配置文件
+def getServerUrl(String str){
+    def url;
+    Properties properties = new Properties();
+    def proFile =  file("src/main/filters/"+str+"/config.properties")
+    if (proFile!= null && proFile.canRead()){
+        properties.load(new FileInputStream(proFile))
+        if (properties!= null){
+            url = properties['baseUrl'];
+        }
+    }
+    url
+}
+
 //字符串拼接
 task StringText{
     def str1 = "woshishuangyinhao"
@@ -71,16 +132,19 @@ task map{
 //定义一个方法  计算两数之和
 task method{
     println(methodA(2,3))
+    println(methodBean())
 }
 
 def methodA(int a,int b){
     a+b
+}
+
+def methodBean(){
     //groovy默认只返回最后一行的结果
     Student student = new Student()
     student.name = "hahahh"
     student.age = 1215415
 }
-
 //定义一个对象 ,在groovy没有私有一说，都能被调用
 class Student{
     String name
@@ -103,12 +167,14 @@ class Student{
     }
 }
 //测试闭包
-//task closure{
-//    println(mEach())
-//}
-////闭包--》回调或者 钩子 在groovy只对{}里面的有效，Closure
-//def mEach(closure){
-//    for (int i in 1..5){
-//        closure(i)
-//    }
-//}
+task closure{
+    mEach{
+        println(it)
+    }
+}
+//闭包--》回调或者 钩子 在groovy只对{}里面的有效，Closure
+def mEach(closure){
+    for (int i in 1..5){
+        closure(i)
+    }
+}
