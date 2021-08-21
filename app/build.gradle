@@ -82,6 +82,8 @@ dependencies {
     implementation project(path: ':wm')
     implementation project(path: ':food')
     implementation project(path: ':router')
+    implementation project(path: ':router_complie')
+    implementation project(path: ':router_annotation')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

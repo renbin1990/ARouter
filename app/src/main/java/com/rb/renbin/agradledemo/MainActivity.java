@@ -1,4 +1,4 @@
-package com.rb.renbin.agradledemo;
+ package com.rb.renbin.agradledemo;
 
 import android.os.Bundle;
 import android.view.View;

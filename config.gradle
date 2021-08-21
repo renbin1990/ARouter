@@ -1,0 +1,6 @@
+//脚本插件
+project.task("scriptPlugin"){
+    doLast {
+        println("这是一个脚本插件")
+    }
+}
